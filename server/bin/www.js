@@ -1,5 +1,16 @@
 #!/usr/bin/env node
 
+const { NODE_ENV } = process.env;
+if (NODE_ENV !== 'production') {
+  const dotenv = require('dotenv');
+  console.log(NODE_ENV);
+  if (NODE_ENV === 'development') {
+    dotenv.config({
+      debug: true,
+    });
+  }
+}
+
 /**
  * Module dependencies.
  */
@@ -7,6 +18,7 @@
 const app = require('../src/app');
 const debug = require('debug')('server:server');
 const http = require('http');
+const mongoose = require('mongoose');
 
 /**
  * Get port from environment and store in Express.
@@ -21,13 +33,28 @@ app.set('port', port);
 
 const server = http.createServer(app);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+(async (msg) => {
+  console.log(msg);
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useCreateIndex: true,
+      useFindAndModify: false,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log('MongoDB connected');
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+    /**
+     * Listen on provided port, on all network interfaces.
+     */
+
+    server.listen(port);
+    server.on('error', onError);
+    server.on('listening', onListening);
+  } catch (err) {
+    console.error(err);
+  }
+})('Connecting to MongoDB');
 
 /**
  * Normalize a port into a number, string, or false.
