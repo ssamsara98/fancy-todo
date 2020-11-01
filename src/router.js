@@ -1,5 +1,6 @@
 const express = require('express');
 
+const todosRouter = require('./routes/todos-router');
 const usersRouter = require('./routes/users');
 
 const router = express.Router();
@@ -10,5 +11,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.use('/users', usersRouter);
+
+router.use('/api/todos', todosRouter);
 
 module.exports = router;
