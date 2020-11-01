@@ -1,20 +1,20 @@
 const express = require('express');
 
-const TodoController = require('../controllers/todos-controller');
+const TodosController = require('../controllers/todos-controller');
 
 const todosRouter = express.Router();
 
-todosRouter.param(':id', TodoController.checkId);
+todosRouter.param(':id', TodosController.checkId);
 
-todosRouter.route('/').post(TodoController.createTodo).get(TodoController.getTodoAll);
+todosRouter.route('/').post(TodosController.createTodo).get(TodosController.getTodoAll);
 
 todosRouter
   .route('/:id')
-  .get(TodoController.getTodo)
-  .put(TodoController.updateTodo)
-  .delete(TodoController.deleteTodo);
+  .get(TodosController.getTodo)
+  .put(TodosController.updateTodo)
+  .delete(TodosController.deleteTodo);
 
-todosRouter.patch('/:id/done', TodoController.updateTodoDone);
-todosRouter.patch('/:id/undone', TodoController.updateTodoUndone);
+todosRouter.patch('/:id/done', TodosController.updateTodoDone);
+todosRouter.patch('/:id/undone', TodosController.updateTodoUndone);
 
 module.exports = todosRouter;

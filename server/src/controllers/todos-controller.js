@@ -1,15 +1,8 @@
 const createHttpError = require('http-errors');
-const mongoose = require('mongoose');
 
 const Todo = require('../models/todo');
 
-function checkMongoError(e) {
-  if (e instanceof mongoose.Error) {
-    if (e.name == 'ValidationError') e.status = 400;
-  }
-}
-
-class TodoController {
+class TodosController {
   static async checkId(req, res, next) {
     try {
       const { id: _id } = req.params;
@@ -34,7 +27,6 @@ class TodoController {
       res.status(201);
       res.json(todo);
     } catch (err) {
-      checkMongoError(err);
       next(err);
     }
   }
@@ -85,7 +77,6 @@ class TodoController {
       res.status(200);
       res.json(todo);
     } catch (err) {
-      checkMongoError(err);
       next(err);
     }
   }
@@ -110,7 +101,6 @@ class TodoController {
       res.status(200);
       res.json(todo);
     } catch (err) {
-      checkMongoError(err);
       next(err);
     }
   }
@@ -135,7 +125,6 @@ class TodoController {
       res.status(200);
       res.json(todo);
     } catch (err) {
-      checkMongoError(err);
       next(err);
     }
   }
@@ -154,4 +143,4 @@ class TodoController {
   }
 }
 
-module.exports = TodoController;
+module.exports = TodosController;
