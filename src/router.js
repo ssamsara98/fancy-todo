@@ -1,7 +1,7 @@
 const express = require('express');
 
 const todosRouter = require('./routes/todos-router');
-const usersRouter = require('./routes/users');
+const usersRouter = require('./routes/users-router');
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.use('/users', usersRouter);
+router.use('/api/users', usersRouter);
 
 router.use('/api/todos', todosRouter);
 
