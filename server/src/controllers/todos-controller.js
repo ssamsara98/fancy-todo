@@ -19,8 +19,9 @@ class TodosController {
   static async createTodo(req, res, next) {
     try {
       const { title, description, status, due_date } = req.body;
+      const { _id: user_id } = req.user;
 
-      const todo = new Todo({ title, description, status, due_date });
+      const todo = new Todo({ title, description, status, due_date, user_id });
 
       await todo.save();
 
@@ -33,7 +34,7 @@ class TodosController {
 
   static async getTodoAll(req, res, next) {
     try {
-      const todos = await Todo.find();
+      const todos = await Todo.find().populate('user_id');
 
       res.status(200);
       res.json(todos);
@@ -47,6 +48,8 @@ class TodosController {
       const { id: _id } = req.params;
 
       const todo = await Todo.findOne({ _id });
+
+      await todo.populate('user_id').execPopulate();
 
       res.status(200);
       res.json(todo);
@@ -72,7 +75,7 @@ class TodosController {
           new: true,
           runValidators: true,
         },
-      );
+      ).populate('user_id');
 
       res.status(200);
       res.json(todo);
@@ -96,7 +99,7 @@ class TodosController {
           new: true,
           runValidators: true,
         },
-      );
+      ).populate('user_id');
 
       res.status(200);
       res.json(todo);
@@ -120,7 +123,7 @@ class TodosController {
           new: true,
           runValidators: true,
         },
-      );
+      ).populate('user_id');
 
       res.status(200);
       res.json(todo);
@@ -134,6 +137,8 @@ class TodosController {
       const { id: _id } = req.params;
 
       const todo = await Todo.findOneAndDelete({ _id });
+
+      await todo.populate('user_id').execPopulate();
 
       res.status(200);
       res.json(todo);

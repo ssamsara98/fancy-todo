@@ -49,8 +49,6 @@ userSchema.method('toJSON', function () {
 
   delete userObject.password;
 
-  console.log(userObject)
-
   return userObject;
 });
 
