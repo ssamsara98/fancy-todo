@@ -11,6 +11,8 @@ import {
 } from '@material-ui/core';
 import { AccountCircle, Menu as MenuIcon } from '@material-ui/icons';
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { authLogout } from '../../stores/actions/authAction';
 
 import useStyles from './Navbar.styles';
 
@@ -19,6 +21,8 @@ export default function Navbar() {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
+  const dispatch = useDispatch();
 
   const handleChange = (event) => {
     setAuth(event.target.checked);
@@ -32,9 +36,14 @@ export default function Navbar() {
     setAnchorEl(null);
   };
 
+  const handleLogout = () => {
+    dispatch(authLogout());
+    localStorage.clear();
+  };
+
   return (
     <>
-    {/* <div className={classes.root}> */}
+      {/* <div className={classes.root}> */}
       <FormGroup>
         <FormControlLabel
           control={<Switch checked={auth} onChange={handleChange} aria-label="login switch" />}
@@ -76,13 +85,20 @@ export default function Navbar() {
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose}>Name</MenuItem>
-                <MenuItem onClick={() => {setAuth(false)}}>Logout</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    setAuth(false);
+                    handleLogout();
+                  }}
+                >
+                  Logout
+                </MenuItem>
               </Menu>
             </div>
           )}
         </Toolbar>
       </AppBar>
-    {/* </div> */}
+      {/* </div> */}
     </>
   );
 }

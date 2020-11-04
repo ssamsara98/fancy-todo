@@ -21,8 +21,9 @@ import { useDispatch } from 'react-redux';
 import useStyles from './Login.styles';
 import Copyright from '../../components/copyright/Copyright';
 import todoApi from '../../apis/todoApi';
+import { authLogin } from '../../stores/actions/authAction';
 
-export default function SignInSide() {
+export default function SignInSide(props) {
   const classes = useStyles();
 
   const [email, setEmail] = useState('');
@@ -30,7 +31,7 @@ export default function SignInSide() {
 
   const [backdropOpen, setBackdropOpen] = useState(false);
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -49,10 +50,11 @@ export default function SignInSide() {
       },
     })
       .then((result) => {
-        console.log(result);
         localStorage.clear();
         localStorage.setItem('token', result?.data?.token);
+        dispatch(authLogin());
         setBackdropOpen(false);
+        props.history.replace('/');
       })
       .catch((err) => {
         console.error(err);
