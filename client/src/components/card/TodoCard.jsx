@@ -1,4 +1,5 @@
 import { Button, Card, CardActions, CardContent, makeStyles, Typography } from '@material-ui/core';
+import moment from 'moment';
 import React from 'react';
 
 const useStyles = makeStyles({
@@ -13,12 +14,19 @@ const useStyles = makeStyles({
     color: 'orangered',
     marginBottom: 12,
   },
+  textBlack: {
+    color: 'grey',
+    marginBottom: 12,
+  },
 });
 
 function TodoCard(props) {
   const { title, description, status, 'due-date': dueDate } = props;
   const classes = useStyles();
-  console.log(props)
+
+  const isOverdue = new Date(dueDate).getTime() < Date.now();
+
+  moment.locale('en-gb');
 
   return (
     <Card variant="elevation">
@@ -27,20 +35,24 @@ function TodoCard(props) {
           {title}
         </Typography>
         <Typography
-          className={status === 1 ? classes.textGreen : classes.textOrange}
+          className={
+            status === 1 ? classes.textGreen : isOverdue ? classes.textBlack : classes.textOrange
+          }
           color="textSecondary"
         >
-          {status === 1 ? 'Done' : 'Incomplete'}
+          {status === 1 ? 'Done' : isOverdue ? 'Over Due' : 'Incomplete'}
         </Typography>
         <Typography variant="body2" component="p">
           {description}
         </Typography>
-        <Typography variant="body2" component="p">
-          {dueDate}
+        <Typography variant="caption" component="p" style={{ textAlign: 'end' }}>
+          {moment(dueDate).format('LL')}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" variant="outlined" color="inherit" style={{color: 'skyblue'}}>Learn More</Button>
+        <Button size="small" variant="outlined" color="inherit" style={{ color: 'skyblue' }}>
+          Learn More
+        </Button>
       </CardActions>
     </Card>
   );

@@ -16,9 +16,11 @@ import {
   Typography,
 } from '@material-ui/core';
 import { LockOutlined } from '@material-ui/icons';
+import { useDispatch } from 'react-redux';
 
 import useStyles from './Login.styles';
 import Copyright from '../../components/copyright/Copyright';
+import todoApi from '../../apis/todoApi';
 
 export default function SignInSide() {
   const classes = useStyles();
@@ -28,13 +30,34 @@ export default function SignInSide() {
 
   const [backdropOpen, setBackdropOpen] = useState(false);
 
-  function handleLogin(e) {
+  // const dispatch = useDispatch();
+
+  async function handleLogin(e) {
     e.preventDefault();
     setBackdropOpen(true);
-    setTimeout(() => {
-      console.log(email, password);
-      setBackdropOpen(false);
-    }, 5000);
+    // setTimeout(() => {
+    //   console.log(email, password);
+    //   setBackdropOpen(false);
+    // }, 5000);
+    console.log(process.env);
+    todoApi({
+      url: '/api/users/sign-in',
+      method: 'POST',
+      data: {
+        email,
+        password,
+      },
+    })
+      .then((result) => {
+        console.log(result);
+        localStorage.clear();
+        localStorage.setItem('token', result?.data?.token);
+        setBackdropOpen(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setBackdropOpen(false);
+      });
   }
 
   return (
