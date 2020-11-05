@@ -85,7 +85,7 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
-                  inputProps={{inputMode: "email"}}
+                  inputProps={{ inputMode: 'email' }}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
