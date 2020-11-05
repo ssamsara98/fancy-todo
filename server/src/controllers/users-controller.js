@@ -16,7 +16,7 @@ class UsersController {
       const payload = { name: user.name, email: user.email };
       const token = signPayload(payload);
 
-      res.status(201).json({ token });
+      res.status(201).json({ token, user: { name: user.name } });
     } catch (err) {
       errorHelper(err);
       next(err);
@@ -34,7 +34,7 @@ class UsersController {
       const payload = { name: user.name, email: user.email };
       const token = signPayload(payload);
 
-      res.status(200).json({ token });
+      res.status(200).json({ token, user: { name: user.name } });
     } catch (err) {
       errorHelper(err);
       next(err);

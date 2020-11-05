@@ -3,7 +3,6 @@ const Todo = require('../models/todo');
 
 const authorization = async (req, res, next) => {
   try {
-    console.log(req.params);
     const { id: todo_id } = req.params;
 
     const todo = await Todo.findOne({ _id: todo_id });
