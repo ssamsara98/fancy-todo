@@ -1,6 +1,8 @@
-import { Button, Container, Grid, Modal, Paper } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Button, Container, Grid, Modal, Paper } from '@material-ui/core';
+import moment from 'moment';
+
 import todoApi from '../../apis/todoApi';
 import TodoCard from '../../components/card/TodoCard';
 import TodoCardEdit from '../../components/card/TodoCardEdit';
@@ -16,9 +18,11 @@ function Home() {
   const classes = useStyles();
 
   const [openBackdrop, setOpenBackdrop] = useState(false);
+  const [openBackdropEdit, setOpenBackdropEdit] = useState(false);
   const [disableSubmit, setDisableSubmit] = useState(false);
   const [todoList, setTodoList] = useState([]);
   const [newTask, setNewTask] = useState({ title: '', description: '', due_date: '' });
+  const [editTask, setEditTask] = useState({ title: '', description: '', due_date: '' });
 
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
@@ -53,6 +57,10 @@ function Home() {
     setNewTask({ title: '', description: '', due_date: '' });
   }
 
+  function clearEditTask() {
+    setEditTask({ id: '', title: '', description: '', due_date: '' });
+  }
+
   function handleTaskChange(name, value) {
     if (name === 'title') {
       setNewTask({ ...newTask, title: value });
@@ -60,6 +68,16 @@ function Home() {
       setNewTask({ ...newTask, description: value });
     } else if (name === 'due_date') {
       setNewTask({ ...newTask, due_date: value });
+    }
+  }
+
+  function handleTaskEdit(name, value) {
+    if (name === 'title') {
+      setEditTask({ ...editTask, title: value });
+    } else if (name === 'description') {
+      setEditTask({ ...editTask, description: value });
+    } else if (name === 'due_date') {
+      setEditTask({ ...editTask, due_date: value });
     }
   }
 
@@ -89,6 +107,32 @@ function Home() {
       });
   }
 
+  function handleEditTask(e, todoId) {
+    e.preventDefault();
+    setDisableSubmit(true);
+
+    todoApi({
+      url: `/api/todos/${todoId}`,
+      method: 'PUT',
+      headers: {
+        Authorization: token,
+      },
+      data: editTask,
+    })
+      .then(() => {
+        fetchTodos();
+        setDisableSubmit(false);
+        setOpenBackdropEdit(false);
+        clearEditTask();
+      })
+      .catch((err) => {
+        console.error(err);
+        setDisableSubmit(false);
+        setOpenBackdropEdit(false);
+        clearEditTask();
+      });
+  }
+
   function handleDeleteTask(id) {
     todoApi({
       url: `/api/todos/${id}`,
@@ -105,9 +149,15 @@ function Home() {
       });
   }
 
-  const handleOpenAddTask = () => {
+  function handleOpenAddTask() {
     setOpenBackdrop(true);
-  };
+  }
+
+  function handleOpenEditTask(todo) {
+    const due_date = moment(todo.due_date).format('YYYY-MM-DD');
+    setEditTask({ id: todo._id, title: todo.title, description: todo.description, due_date });
+    setOpenBackdropEdit(true);
+  }
 
   return (
     <>
@@ -128,7 +178,11 @@ function Home() {
             {todoList.map((todo) => {
               return (
                 <Grid item xs={12} sm={6} lg={3} key={todo._id}>
-                  <TodoCard todo={todo} handleDeleteTask={handleDeleteTask} />
+                  <TodoCard
+                    todo={todo}
+                    handleDeleteTask={handleDeleteTask}
+                    onEdit={() => handleOpenEditTask(todo)}
+                  />
                 </Grid>
               );
             })}
@@ -140,19 +194,35 @@ function Home() {
       <Modal
         className={classes.backdrop}
         open={openBackdrop}
-        onClose={() => {
-          setOpenBackdrop(false);
-        }}
+        onClose={() => setOpenBackdrop(false)}
         style={{
           display: 'flex',
           alignItems: 'center',
         }}
       >
         <TodoCardEdit
-          newTask={newTask}
+          task={newTask}
           handleTaskChange={handleTaskChange}
-          handleAddTask={handleAddTask}
+          handleSumbitTask={handleAddTask}
           disableSubmit={disableSubmit}
+        />
+      </Modal>
+      {/* Edit Task */}
+      <Modal
+        className={classes.backdrop}
+        open={openBackdropEdit}
+        onClose={() => setOpenBackdropEdit(false)}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        <TodoCardEdit
+          task={editTask}
+          handleTaskChange={handleTaskEdit}
+          handleSumbitTask={handleEditTask}
+          disableSubmit={disableSubmit}
+          isEdit
         />
       </Modal>
     </>

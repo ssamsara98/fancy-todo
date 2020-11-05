@@ -31,7 +31,7 @@ const useStyles = makeStyles({
 });
 
 function TodoCard(props) {
-  const { todo, handleDeleteTask } = props;
+  const { todo, handleDeleteTask, onEdit } = props;
   const classes = useStyles();
 
   const isOverdue = new Date(todo.due_date).getTime() < Date.now();
@@ -40,7 +40,7 @@ function TodoCard(props) {
 
   return (
     <Card variant="elevation">
-      <CardActionArea>
+      <CardActionArea onClick={onEdit}>
         <CardContent>
           <Typography variant="h6" component="h3" gutterBottom>
             {todo.title}

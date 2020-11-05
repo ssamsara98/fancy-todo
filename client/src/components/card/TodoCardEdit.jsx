@@ -30,7 +30,7 @@ function TodoCardAddNew(props) {
   const classes = useStyles();
 
   // const { isEdit } = props;
-  const { newTask, handleTaskChange, handleAddTask, disableSubmit } = props;
+  const { isEdit, task, handleTaskChange, handleSumbitTask, disableSubmit } = props;
 
   return (
     <Container maxWidth="md">
@@ -39,11 +39,11 @@ function TodoCardAddNew(props) {
           <CardHeader
             title={
               <Typography component="h1" variant="h5">
-                New Task
+                {isEdit ? 'Change Task' : 'Add Task'}
               </Typography>
             }
           />
-          <form onSubmit={handleAddTask}>
+          <form onSubmit={isEdit ? (e) => handleSumbitTask(e, task.id) : handleSumbitTask}>
             <CardContent>
               <TextField
                 variant="outlined"
@@ -53,7 +53,7 @@ function TodoCardAddNew(props) {
                 name="new-task-title"
                 label="Task Title"
                 autoFocus
-                value={newTask.title}
+                value={task.title}
                 onChange={(e) => handleTaskChange('title', e.target.value)}
               />
               <TextField
@@ -64,7 +64,7 @@ function TodoCardAddNew(props) {
                 name="new-task-description"
                 label="Task Description"
                 autoFocus
-                value={newTask.description}
+                value={task.description}
                 onChange={(e) => handleTaskChange('description', e.target.value)}
               />
               <TextField
@@ -79,7 +79,7 @@ function TodoCardAddNew(props) {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={newTask.due_date}
+                value={task.due_date}
                 onChange={(e) => handleTaskChange('due_date', e.target.value)}
               />
             </CardContent>
@@ -91,7 +91,7 @@ function TodoCardAddNew(props) {
                 className={classes.submit}
                 disabled={disableSubmit}
               >
-                Add Task
+                {isEdit ? 'Edit Task' : 'Add Task'}
               </Button>
             </CardActions>
           </form>
