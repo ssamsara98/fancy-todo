@@ -1,17 +1,17 @@
 import {
   AppBar,
-  FormControlLabel,
-  FormGroup,
+  // FormControlLabel,
+  // FormGroup,
   IconButton,
   Menu,
   MenuItem,
-  Switch,
+  // Switch,
   Toolbar,
   Typography,
 } from '@material-ui/core';
 import { AccountCircle, Menu as MenuIcon } from '@material-ui/icons';
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { authLogout } from '../../stores/actions/authAction';
 
 import useStyles from './Navbar.styles';
@@ -20,13 +20,14 @@ export default function Navbar() {
   const classes = useStyles();
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const name = useSelector((state) => state.auth.name);
   const open = Boolean(anchorEl);
 
   const dispatch = useDispatch();
 
-  const handleChange = (event) => {
-    setAuth(event.target.checked);
-  };
+  // const handleChange = (event) => {
+  //   setAuth(event.target.checked);
+  // };
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -44,12 +45,12 @@ export default function Navbar() {
   return (
     <>
       {/* <div className={classes.root}> */}
-      <FormGroup>
+      {/* <FormGroup>
         <FormControlLabel
           control={<Switch checked={auth} onChange={handleChange} aria-label="login switch" />}
           label={auth ? 'Logout' : 'Login'}
         />
-      </FormGroup>
+      </FormGroup> */}
       <AppBar position="static">
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
@@ -84,7 +85,7 @@ export default function Navbar() {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Name</MenuItem>
+                <MenuItem onClick={handleClose}>{name}</MenuItem>
                 <MenuItem
                   onClick={() => {
                     setAuth(false);

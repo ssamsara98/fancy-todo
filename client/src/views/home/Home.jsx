@@ -133,6 +133,25 @@ function Home() {
       });
   }
 
+  function handlePatchTask(todoId, status, cb) {
+    todoApi({
+      url: `/api/todos/${todoId}/${status}`,
+      method: 'PATCH',
+      headers: {
+        Authorization: token,
+      },
+      data: editTask,
+    })
+      .then(() => {
+        fetchTodos();
+        cb();
+      })
+      .catch((err) => {
+        console.error(err);
+        cb();
+      });
+  }
+
   function handleDeleteTask(id) {
     todoApi({
       url: `/api/todos/${id}`,
@@ -182,6 +201,7 @@ function Home() {
                     todo={todo}
                     handleDeleteTask={handleDeleteTask}
                     onEdit={() => handleOpenEditTask(todo)}
+                    handlePatchTask={handlePatchTask}
                   />
                 </Grid>
               );

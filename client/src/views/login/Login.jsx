@@ -52,6 +52,7 @@ export default function SignInSide(props) {
       .then((result) => {
         localStorage.clear();
         localStorage.setItem('token', result?.data?.token);
+        localStorage.setItem('user', JSON.stringify(result?.data?.user));
         dispatch(authLogin());
         setBackdropOpen(false);
         props.history.replace('/');

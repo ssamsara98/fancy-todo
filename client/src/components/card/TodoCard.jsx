@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { DeleteForever } from '@material-ui/icons';
 import moment from 'moment';
-import React from 'react';
+import React, { useState } from 'react';
 
 const useStyles = makeStyles({
   pos: {
@@ -31,12 +31,24 @@ const useStyles = makeStyles({
 });
 
 function TodoCard(props) {
-  const { todo, handleDeleteTask, onEdit } = props;
+  const { todo, handleDeleteTask, onEdit, handlePatchTask } = props;
   const classes = useStyles();
+
+  const [isDisableButton, setIsDisableButton] = useState(false);
 
   const isOverdue = new Date(todo.due_date).getTime() < Date.now();
 
   moment.locale('en-gb');
+
+  function handleToggleTask(e, todoId, status) {
+    e.preventDefault();
+    const mark = status === 0 ? 'done' : 'undone';
+    setIsDisableButton(true);
+
+    handlePatchTask(todoId, mark, () => {
+      setIsDisableButton(false);
+    });
+  }
 
   return (
     <Card variant="elevation">
@@ -67,7 +79,14 @@ function TodoCard(props) {
       </CardActionArea>
       <CardActions>
         <Grid container justify="space-between">
-          <Button size="small" variant="outlined" color="inherit" style={{ color: 'royalblue' }}>
+          <Button
+            size="small"
+            variant="outlined"
+            color="inherit"
+            style={{ color: 'royalblue' }}
+            onClick={(e) => handleToggleTask(e, todo._id, todo.status)}
+            disabled={isDisableButton}
+          >
             {todo.status === 0 ? 'Mark as Done' : 'Mark as Undone'}
           </Button>
           <Button

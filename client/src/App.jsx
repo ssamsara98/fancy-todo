@@ -22,12 +22,20 @@ class App extends Component {
     return (
       <HashRouter>
         <Switch>
-          <Route path="/" exact>
-            {isAuthenticated ? <Home /> : <Redirect to="/login" />}
-          </Route>
-          <Route path="/login" exact>
-            {isAuthenticated ? <Redirect to="/" /> : <Login />}
-          </Route>
+          <Route
+            path="/"
+            exact
+            component={(routeProps) =>
+              isAuthenticated ? <Home {...routeProps} /> : <Redirect to="/login" />
+            }
+          />
+          <Route
+            path="/login"
+            exact
+            render={(routeProps) =>
+              isAuthenticated ? <Redirect to="/" /> : <Login {...routeProps} />
+            }
+          />
           <Route path="/register" exact component={Register} />
           <Route path="/404" exact component={NotFound} />
           <Route path="*">

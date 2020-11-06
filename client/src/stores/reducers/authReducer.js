@@ -3,10 +3,13 @@ import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_AUTO_LOGIN } from '../actions/authType';
 const initialState = { isLogin: false, token: null };
 
 const authLogin = (state) => {
+  const user = JSON.parse(localStorage.getItem('user'));
+
   return {
     ...state,
     isLogin: true,
     token: localStorage.getItem('token'),
+    name: user?.name,
   };
 };
 
