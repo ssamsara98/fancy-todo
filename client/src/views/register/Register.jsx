@@ -15,27 +15,58 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import { LockOutlined } from '@material-ui/icons';
+import { LockOutlined, ErrorOutline } from '@material-ui/icons';
 
 import useStyles from './Register.styles';
 import Copyright from '../../components/copyright/Copyright';
+import todoApi from '../../apis/todoApi';
+import { useDispatch } from 'react-redux';
+import { authLogin } from '../../stores/actions/authAction';
 
-export default function SignUp() {
+export default function SignUp(props) {
   const classes = useStyles();
 
-  const [fullname, setFullname] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
+  const [regForm, setRegForm] = useState({ name: '', email: '', password: '' });
   const [backdropOpen, setBackdropOpen] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  const dispatch = useDispatch();
 
   function handleRegister(e) {
     e.preventDefault();
     setBackdropOpen(true);
-    setTimeout(() => {
-      console.log(fullname, email, password);
-      setBackdropOpen(false);
-    }, 5000);
+
+    todoApi({
+      url: '/api/users/sign-up',
+      method: 'POST',
+      data: regForm,
+    })
+      .then((result) => {
+        localStorage.clear();
+        localStorage.setItem('token', result?.data?.token);
+        localStorage.setItem('user', JSON.stringify(result?.data?.user));
+        dispatch(authLogin());
+        setBackdropOpen(false);
+        props.history.replace('/');
+      })
+      .catch((err) => {
+        console.error(err);
+        setIsError(true);
+        setTimeout(() => {
+          setIsError(false);
+          setBackdropOpen(false);
+        }, 2000);
+      });
+  }
+
+  function onRegFormChange(value, type) {
+    if (type === 'name') {
+      setRegForm({ ...regForm, name: value });
+    } else if (type === 'email') {
+      setRegForm({ ...regForm, email: value });
+    } else if (type === 'password') {
+      setRegForm({ ...regForm, password: value });
+    }
   }
 
   return (
@@ -53,16 +84,16 @@ export default function SignUp() {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  autoComplete="fullname"
-                  name="fullName"
                   variant="outlined"
                   required
                   fullWidth
                   id="fullName"
+                  name="fullName"
                   label="Full Name"
+                  autoComplete="fullname"
                   autoFocus
-                  value={fullname}
-                  onChange={(e) => setFullname(e.target.value)}
+                  value={regForm.name}
+                  onChange={(e) => onRegFormChange(e.target.value, 'name')}
                 />
               </Grid>
               {/* <Grid item xs={12} sm={6}>
@@ -82,12 +113,13 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
                   name="email"
+                  label="Email Address"
+                  type="email"
                   autoComplete="email"
                   inputProps={{ inputMode: 'email' }}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={regForm.email}
+                  onChange={(e) => onRegFormChange(e.target.value, 'email')}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -95,14 +127,14 @@ export default function SignUp() {
                   variant="outlined"
                   required
                   fullWidth
+                  id="password"
                   name="password"
                   label="Password"
                   type="password"
-                  id="password"
                   autoComplete="current-password"
                   inputProps={{ minLength: 6, maxLength: 32 }}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={regForm.password}
+                  onChange={(e) => onRegFormChange(e.target.value, 'password')}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -136,8 +168,19 @@ export default function SignUp() {
         </Box>
       </Container>
       {/* backdrop */}
-      <Backdrop className={classes.backdrop} open={backdropOpen}>
-        <CircularProgress color="inherit" size="10rem" />
+      <Backdrop
+        className={classes.backdrop}
+        open={backdropOpen}
+        style={{ flexDirection: 'column' }}
+      >
+        {!isError ? (
+          <CircularProgress color="inherit" size="10rem" />
+        ) : (
+          <>
+            <ErrorOutline color="secondary" style={{ fontSize: '10rem' }} />
+            <span style={{ fontSize: '3rem' }}>Error</span>
+          </>
+        )}
       </Backdrop>
     </>
   );

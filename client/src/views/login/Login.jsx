@@ -15,7 +15,7 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import { LockOutlined } from '@material-ui/icons';
+import { ErrorOutline, LockOutlined } from '@material-ui/icons';
 import { useDispatch } from 'react-redux';
 
 import useStyles from './Login.styles';
@@ -30,17 +30,14 @@ export default function SignInSide(props) {
   const [password, setPassword] = useState('');
 
   const [backdropOpen, setBackdropOpen] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const dispatch = useDispatch();
 
   async function handleLogin(e) {
     e.preventDefault();
     setBackdropOpen(true);
-    // setTimeout(() => {
-    //   console.log(email, password);
-    //   setBackdropOpen(false);
-    // }, 5000);
-    // console.log(process.env);
+
     todoApi({
       url: '/api/users/sign-in',
       method: 'POST',
@@ -59,7 +56,41 @@ export default function SignInSide(props) {
       })
       .catch((err) => {
         console.error(err);
+        setIsError(true);
+        setTimeout(() => {
+          setIsError(false);
+          setBackdropOpen(false);
+        }, 2000);
+      });
+  }
+
+  async function handleLoginAsGuest(e) {
+    e.preventDefault();
+    setBackdropOpen(true);
+
+    todoApi({
+      url: '/api/users/sign-in',
+      method: 'POST',
+      data: {
+        email: 'guest@mail.com',
+        password: '123456',
+      },
+    })
+      .then((result) => {
+        localStorage.clear();
+        localStorage.setItem('token', result?.data?.token);
+        localStorage.setItem('user', JSON.stringify(result?.data?.user));
+        dispatch(authLogin());
         setBackdropOpen(false);
+        props.history.replace('/');
+      })
+      .catch((err) => {
+        console.error(err);
+        setIsError(true);
+        setTimeout(() => {
+          setIsError(false);
+          setBackdropOpen(false);
+        }, 2000);
       });
   }
 
@@ -119,6 +150,15 @@ export default function SignInSide(props) {
               >
                 Log In
               </Button>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={handleLoginAsGuest}
+              >
+                Log In as Guest
+              </Button>
               <Grid container>
                 <Grid item xs>
                   <Link variant="body2">Forgot password?</Link>
@@ -136,8 +176,19 @@ export default function SignInSide(props) {
           </div>
         </Grid>
       </Grid>
-      <Backdrop className={classes.backdrop} open={backdropOpen}>
-        <CircularProgress color="inherit" size="10rem" />
+      <Backdrop
+        className={classes.backdrop}
+        open={backdropOpen}
+        style={{ flexDirection: 'column' }}
+      >
+        {!isError ? (
+          <CircularProgress color="inherit" size="10rem" />
+        ) : (
+          <>
+            <ErrorOutline color="secondary" style={{ fontSize: '10rem' }} />
+            <span style={{ fontSize: '3rem' }}>Error</span>
+          </>
+        )}
       </Backdrop>
     </>
   );
