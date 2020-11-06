@@ -34,7 +34,7 @@ class TodosController {
 
   static async getTodoAll(req, res, next) {
     try {
-      const todos = await Todo.find().populate('user_id');
+      const todos = await Todo.find({ user_id: req.user._id }).populate('user_id');
 
       res.status(200);
       res.json(todos);
