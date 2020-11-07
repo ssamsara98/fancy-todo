@@ -1,16 +1,16 @@
 {
-  "name": "server",
+  "name": "fancy-todo-server",
   "version": "1.0.0",
   "private": true,
   "description": "Fancy Todo - Server",
   "main": "bin/www.js",
   "scripts": {
-    "prettier:file": "prettier -w \"./**/*.{html,css,js,json,ts,scss}\"",
     "start": "node .",
     "start:dev": "cross-env NODE_ENV=development UV_THREADPOOL_SIZE=128 nodemon .",
     "start:debug": "cross-env DEBUG=server:* npm run start:dev",
     "start:debug-express": "cross-env DEBUG=express:* npm run start:dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier:file": "prettier -w \"{bin,src}/**/*.{html,css,scss,js,jsx,ts,tsx,json}\""
   },
   "keywords": [],
   "author": "Sulthon Abdul Malik",
@@ -34,5 +34,8 @@
     "dotenv": "^8.2.0",
     "nodemon": "^2.0.6",
     "prettier": "^2.1.2"
+  },
+  "engines": {
+    "node": "12.*"
   }
 }
