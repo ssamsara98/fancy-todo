@@ -1,201 +1,143 @@
 # Fancy Todo - Server
 
-## Todo
+- [`POST` Create Todo](#create-todo)
+- [`GET` Get Todo List](#get-todo-list)
+- [`GET` Get Todo](#get-todo)
+- [`PATCH` Update Todo](#update-todo)
+- [`Delete` Update Todo](#delete-todo)
 
-### POST /api/todos
+---
 
-- **Request Header**
+## Create Todo
 
+- **Method** `POST`
+- **URL** `/todos`
+- **Query Params** `None`
+- **Data Params**
   ```json
   {
-    "Content-Type": "application/json"
+    "title": "string",
+    "description": "string",
+    "due_date": "date"
   }
   ```
-
-- **Request Body**
-
-  ```json
-  {
-    "title": "Learn REST API",
-    "description": "Learn how to create RESTful API with Express and MongoDB",
-    "due_date": "2020-01-29"
-  }
-  ```
-
-- **Response**
-
-  ```json
-  {
-    "_id": "<ObjectId>",
-    "title": "Learn REST API",
-    "description": "Learn how to create RESTful API with Express and MongoDB",
-    "due_date": "2020-01-29T00:00:00.000Z",
-    "status": 0,
-    "createdAt": "2020-01-29T00:00:00.000Z",
-    "updatedAt": "2020-01-29T00:00:00.000Z",
-    "__v": 0
-  }
-  ```
-
-### GET /api/todos
-
-- **Request Header**
-
-  _None_
-
-- **Request Body**
-
-  _None_
-
-- **Response**
-
-  ```json
-  [
+- **Success Response**
+  - **Code** `201`
+  - **Content**
+    ```json
     {
-      "_id": "<ObjectId>",
-      "title": "Learn REST API",
-      "description": "Learn how to create RESTful API with Express and MongoDB",
-      "due_date": "2020-01-29T00:00:00.000Z",
-      "status": 0,
-      "createdAt": "2020-01-29T00:00:00.000Z",
-      "updatedAt": "2020-01-29T00:00:00.000Z",
-      "__v": 0
-    },
-    ...
-  ]
-  ```
+      "id": "number",
+      "title": "string",
+      "description": "string",
+      "status": "string",
+      "due_date": "date"
+    }
+    ```
 
-### GET /api/todos/:id
+---
 
-- **Request Header**
+## Get Todo List
 
-  _None_
-
-- **Request Body**
-
-  _None_
-
-- **Response**
-
+- **Method** `GET`
+- **URL** `/todos`
+- **Query Params**
   ```json
   {
-    "_id": "<ObjectId>",
-    "title": "Learn REST API",
-    "description": "Learn how to create RESTful API with Express and MongoDB",
-    "due_date": "2020-01-29T00:00:00.000Z",
-    "status": 0,
-    "createdAt": "2020-01-29T00:00:00.000Z",
-    "updatedAt": "2020-01-29T00:00:00.000Z",
-    "__v": 0
+    "page?": "number",
+    "limit?": "number"
   }
   ```
+- **Data Params** `None`
+- **Success Response**
+  - **Code** `200`
+  - **Content**
+    ```json
+    {
+      "prev": "number",
+      "next": "number",
+      "count": "number",
+      "total": "number",
+      "result": [
+        {
+          "id": "number",
+          "title": "string",
+          "description": "string",
+          "status": "string",
+          "due_date": "date"
+        }
+      ]
+    }
+    ```
 
-### PUT /api/todos/:id
+---
 
-- **Request Header**
+## Get Todo
 
+- **Method** `GET`
+- **URL** `/todos/:id`
+- **Query Params** `None`
+- **Data Params** `None`
+- **Success Response**
+  - **Code** `200`
+  - **Content**
+    ```json
+    {
+      "id": "number",
+      "title": "string",
+      "description": "string",
+      "status": "string",
+      "due_date": "date"
+    }
+    ```
+
+---
+
+## Update Todo
+
+- **Method** `Patch`
+- **URL** `/todos/:id`
+- **Query Params** `None`
+- **Data Params**
   ```json
   {
-    "Content-Type": "application/json"
+    "title?": "string",
+    "description?": "string",
+    "status?": "string",
+    "due_date?": "date"
   }
   ```
+- **Success Response**
+  - **Code** `200`
+  - **Content**
+    ```json
+    {
+      "id": "number",
+      "title": "string",
+      "description": "string",
+      "status": "string",
+      "due_date": "date"
+    }
+    ```
 
-- **Request Body**
+---
 
-  ```json
-  {
-    "title": "Learn REST API with Expess",
-    "description": "Learn how to create RESTful API with Express and No-SQL",
-    "due_date": "2020-01-29"
-  }
-  ```
+## Delete Todo
 
-- **Response**
+- **Method** `Delete`
+- **URL** `/todos/:id`
+- **Query Params** `None`
+- **Data Params** `None`
+- **Success Response**
+  - **Code** `200`
+  - **Content**
+    ```json
+    {
+      "id": "number",
+      "title": "string",
+      "description": "string",
+      "status": "string",
+      "due_date": "date"
+    }
+    ```
 
-  ```json
-  {
-    "_id": "<ObjectId>",
-    "title": "Learn REST API with Expess",
-    "description": "Learn how to create RESTful API with Express and No-SQL",
-    "due_date": "2020-01-29T00:00:00.000Z",
-    "status": 0,
-    "createdAt": "2020-01-29T00:00:00.000Z",
-    "updatedAt": "2020-01-29T00:00:00.000Z",
-    "__v": 0
-  }
-  ```
-
-### PATCH /api/todos/:id/done
-
-- **Request Header**
-
-  _None_
-
-- **Request Body**
-
-  _None_
-
-- **Response**
-
-  ```json
-  {
-    "_id": "<ObjectId>",
-    "title": "Learn REST API with Expess",
-    "description": "Learn how to create RESTful API with Express and No-SQL",
-    "due_date": "2020-01-29T00:00:00.000Z",
-    "status": 1,
-    "createdAt": "2020-01-29T00:00:00.000Z",
-    "updatedAt": "2020-01-29T00:00:00.000Z",
-    "__v": 0
-  }
-  ```
-
-### PATCH /api/todos/:id/undone
-
-- **Request Header**
-
-  _None_
-
-- **Request Body**
-
-  _None_
-
-- **Response**
-
-  ```json
-  {
-    "_id": "<ObjectId>",
-    "title": "Learn REST API with Expess",
-    "description": "Learn how to create RESTful API with Express and No-SQL",
-    "due_date": "2020-01-29T00:00:00.000Z",
-    "status": 0,
-    "createdAt": "2020-01-29T00:00:00.000Z",
-    "updatedAt": "2020-01-29T00:00:00.000Z",
-    "__v": 0
-  }
-  ```
-
-### DELETE /api/todos/:id
-
-- **Request Header**
-
-  _None_
-
-- **Request Body**
-
-  _None_
-
-- **Response**
-
-  ```json
-  {
-    "_id": "<ObjectId>",
-    "title": "Learn REST API with Expess",
-    "description": "Learn how to create RESTful API with Express and No-SQL",
-    "due_date": "2020-01-29T00:00:00.000Z",
-    "status": 1,
-    "createdAt": "2020-01-29T00:00:00.000Z",
-    "updatedAt": "2020-01-29T00:00:00.000Z",
-    "__v": 0
-  }
-  ```
+---

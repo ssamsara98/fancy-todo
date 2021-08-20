@@ -1,0 +1,22 @@
+{
+  "name": "fancy-todo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/samara98/fancy-todo.git",
+  "author": "Sulthon Abdul Malik <sulthon.abdmalik@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "husky": "^4",
+    "lint-staged": "^11.1.2",
+    "prettier": "^2.3.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{md,html,css,scss,json,js,jsx,ts,tsx,vue}": "prettier -w"
+  },
+  "dependencies": {}
+}
