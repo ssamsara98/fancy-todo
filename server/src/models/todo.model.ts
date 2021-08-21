@@ -7,7 +7,7 @@ interface TodoAttributes {
   id: number;
   title: string;
   description: string;
-  status: 'ongoing' | 'done';
+  status?: 'ongoing' | 'done';
   dueDate: Date;
 }
 
