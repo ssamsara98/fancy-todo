@@ -6,6 +6,7 @@
 import http from 'http';
 import debug from 'debug';
 import app from '../app';
+import db from '../models';
 
 const dbg = debug('fancy-todo:server');
 
@@ -19,6 +20,15 @@ app.set('port', port);
  * Create HTTP server.
  */
 const server = http.createServer(app);
+
+(async () => {
+  try {
+    await db.sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+  } catch (err) {
+    console.error('Unable to connect to the database:', err);
+  }
+})();
 
 /**
  * Listen on provided port, on all network interfaces.

@@ -53,8 +53,8 @@
   - **Content**
     ```json
     {
-      "prev": "number",
-      "next": "number",
+      "prev": "string | null",
+      "next": "string | null",
       "count": "number",
       "total": "number",
       "result": [
