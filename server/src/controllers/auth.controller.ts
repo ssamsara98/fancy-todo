@@ -18,7 +18,11 @@ class AuthController {
   static register = catchAsync<{}, User, RegisterDto>(async (req, res) => {
     const { name, email, password } = req.body;
 
+    const foundUser = await db.user.findOne({ where: { email } });
+    if (foundUser) throw createHttpError(400, 'Email already exist');
+
     const user = await db.user.create({ name, email, password });
+    user.setDataValue('password', undefined!);
 
     res.status(201);
     res.json(user);
@@ -32,7 +36,9 @@ class AuthController {
 
     if (!user) throw createHttpError(401, 'Email or Password is invalid');
 
-    if (password !== user.password) throw createHttpError(401, 'Email or Password is invalid');
+    const match = await user.comparePassword(password);
+    if (!match) throw createHttpError(401, 'Email or Password is invalid');
+    user.setDataValue('password', undefined!);
 
     res.json(user);
     return;

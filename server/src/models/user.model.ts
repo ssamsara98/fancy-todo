@@ -2,6 +2,7 @@
 
 import { DataTypes as DT, Model, Sequelize } from 'sequelize';
 import { Models } from '.';
+import { comparePassword, hashPassword } from '../utils/bcrypt.util';
 
 interface UserAttributes {
   id?: number;
@@ -27,6 +28,10 @@ export class User extends Model<UserAttributes> implements UserAttributes {
     // define association here
     // todo
     this.hasMany(models.todo, { foreignKey: 'authorId' });
+  }
+
+  async comparePassword(password: string) {
+    return await comparePassword(password, this.password);
   }
 }
 
@@ -58,6 +63,12 @@ export const user = (sequelize: Sequelize) => {
       modelName: 'user',
       underscored: true,
       defaultScope: { attributes: { exclude: ['password'] } },
+      hooks: {
+        beforeCreate: async (user) => {
+          user.password = await hashPassword(user.password);
+          return;
+        },
+      },
     },
   );
 

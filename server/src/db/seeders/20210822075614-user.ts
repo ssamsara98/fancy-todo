@@ -1,6 +1,7 @@
 'use strict';
 
 import { DataTypes, QueryInterface } from 'sequelize';
+import { hashPassword } from '../../utils/bcrypt.util';
 
 export default {
   up: async (queryInterface: QueryInterface, DT: typeof DataTypes) => {
@@ -20,7 +21,7 @@ export default {
           id: 1,
           name: 'Sulthon Abdul Malik',
           email: 'sulthon.abdmalik@gmail.com',
-          password: 'asdf1234',
+          password: await hashPassword('asdf1234'),
           created_at: new Date(),
           updated_at: new Date(),
         },
