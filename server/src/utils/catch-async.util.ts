@@ -1,4 +1,3 @@
-// import { RequestHandler } from 'express';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import * as core from 'express-serve-static-core';
 
