@@ -1,4 +1,4 @@
-import { Options } from 'sequelize/types';
+import { Options } from 'sequelize';
 
 const databaseConfig: {
   development: Options & { url: string };
