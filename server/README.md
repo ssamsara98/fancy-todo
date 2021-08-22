@@ -1,5 +1,8 @@
 # Fancy Todo - Server
 
+Set auto increment
+`ALTER SEQUENCE {table}_{column}_seq RESTART WITH {number}`
+
 - [`POST` Create Todo](#create-todo)
 - [`GET` Get Todo List](#get-todo-list)
 - [`GET` Get Todo](#get-todo)

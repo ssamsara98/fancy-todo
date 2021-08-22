@@ -25,6 +25,14 @@ export default {
           created_at: new Date(),
           updated_at: new Date(),
         },
+        {
+          id: 2,
+          name: 'Testo',
+          email: 'test@test.com',
+          password: await hashPassword('asdf1234'),
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
       ],
       {},
     );

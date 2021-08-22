@@ -2,15 +2,15 @@
 
 import { DataTypes, QueryInterface } from 'sequelize';
 
-function createTodos(n: number = 100) {
+function createTodos(n: number = 10) {
   const todos = [];
   for (let i = 1; i <= n; i++) {
     const todo = {
       id: i,
-      author_id: 1,
+      author_id: Math.floor(Math.random() * 2) + 1,
       title: `test ${i}`,
       description: `testing ${i}`,
-      status: Math.floor(Math.random() * 2) === 1 ? 'done' : 'ongoing',
+      status: !!Math.floor(Math.random() * 2) ? 'done' : 'ongoing',
       due_date: new Date(Date.now() + 1000 * 3600 * 24 * Math.random() * 30),
       created_at: new Date(),
       updated_at: new Date(),
@@ -32,7 +32,7 @@ export default {
      * }], {});
      */
     // await queryInterface.bulkInsert('todos', createTodos(20));
-    await queryInterface.bulkInsert('todos', createTodos(20));
+    await queryInterface.bulkInsert('todos', createTodos(100));
   },
 
   down: async (queryInterface: QueryInterface, DT: typeof DataTypes) => {

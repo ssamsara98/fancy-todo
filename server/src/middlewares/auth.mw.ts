@@ -12,7 +12,7 @@ const authMw = catchAsync(async (req, res, next) => {
 
   const user = await db.user.findByPk(payload.sub);
 
-  if (!user) throw createHttpError(403);
+  if (!user) throw createHttpError(401);
 
   (req as any).user = user;
 
