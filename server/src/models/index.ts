@@ -6,7 +6,9 @@ import { User, user } from './user.model';
 const env = (process.env.NODE_ENV as keyof typeof databaseConfig) || 'development';
 const config = databaseConfig[env];
 
-const sequelize = config.url ? new Sequelize(config.url, config) : new Sequelize(config);
+const sequelize = config.url
+  ? new Sequelize(config.url, config)
+  : new Sequelize(config.database!, config.username!, config.password, config);
 
 export type Models = {
   todo: typeof Todo;

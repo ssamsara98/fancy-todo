@@ -10,6 +10,12 @@ const databaseConfig = {
   production: {
     dialect: 'postgres',
     url: process.env.DATABASE_URL,
+    ssl: true,
+    dialectOptions: {
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    },
   },
 };
 
