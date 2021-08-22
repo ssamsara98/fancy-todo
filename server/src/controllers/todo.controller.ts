@@ -21,6 +21,7 @@ class TodoController {
   static createTodo = catchAsync<{}, Todo, CreateTodo>(async (req, res) => {
     const { title, description, dueDate } = req.body;
     const todo = await db.todo.create({
+      authorId: 1,
       title,
       description,
       dueDate,
@@ -38,6 +39,7 @@ class TodoController {
 
       const count = await db.todo.count();
       const total = Math.ceil(count / limit);
+      console.log(page, total);
 
       if (page > total) throw createHttpError(400, 'Invalid Page');
 
@@ -59,7 +61,7 @@ class TodoController {
 
   static getTodo = catchAsync<{ todo_id: number }, Todo | null>(async (req, res) => {
     const { todo_id: todoId } = req.params;
-    const todo = await db.todo.findByPk(todoId);
+    const todo = await db.todo.findByPk(todoId, { include: [{ model: db.user, as: 'author' }] });
 
     res.json(todo);
     return;

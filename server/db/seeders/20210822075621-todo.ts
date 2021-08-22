@@ -2,11 +2,12 @@
 
 import { DataTypes, QueryInterface } from 'sequelize';
 
-function createTodos(n: number = 10) {
+function createTodos(n: number = 100) {
   const todos = [];
   for (let i = 1; i <= n; i++) {
     const todo = {
       id: i,
+      author_id: 1,
       title: `test ${i}`,
       description: `testing ${i}`,
       status: Math.floor(Math.random() * 2) === 1 ? 'done' : 'ongoing',

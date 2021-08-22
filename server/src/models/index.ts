@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize';
 import databaseConfig from '../config/database';
 import { todo, Todo } from './todo.model';
+import { User, user } from './user.model';
 
 const env = (process.env.NODE_ENV as keyof typeof databaseConfig) || 'development';
 const config = databaseConfig[env];
@@ -9,10 +10,12 @@ const sequelize = config.url ? new Sequelize(config.url, config) : new Sequelize
 
 export type Models = {
   todo: typeof Todo;
+  user: typeof User;
 };
 
 const models: Models = {
   todo: todo(sequelize),
+  user: user(sequelize),
 };
 
 Object.keys(models).forEach((modelName) => {

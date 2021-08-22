@@ -5,6 +5,7 @@ import { Models } from '.';
 
 interface TodoAttributes {
   id: number;
+  authorId: number;
   title: string;
   description: string;
   status?: 'ongoing' | 'done';
@@ -15,6 +16,7 @@ interface TodoCreationAttributes extends Optional<TodoAttributes, 'id'> {}
 
 export class Todo extends Model<TodoAttributes, TodoCreationAttributes> implements TodoAttributes {
   id!: number;
+  authorId!: number;
   title!: string;
   description!: string;
   status!: 'ongoing' | 'done';
@@ -27,6 +29,8 @@ export class Todo extends Model<TodoAttributes, TodoCreationAttributes> implemen
    */
   static associate(models: Models) {
     // define association here
+    // user
+    this.belongsTo(models.user, { foreignKey: 'authorId', as: 'author' });
   }
 }
 
@@ -38,6 +42,15 @@ export const todo = (sequelize: Sequelize) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+      },
+      authorId: {
+        type: DT.INTEGER,
+        allowNull: false,
+        field: 'author_id',
+        references: {
+          model: 'users',
+          key: 'id',
+        },
       },
       title: {
         type: DT.STRING,
