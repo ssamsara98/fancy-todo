@@ -1,7 +1,7 @@
 'use strict';
 
 import { DataTypes, QueryInterface } from 'sequelize';
-import { hashPassword } from '../../utils/bcrypt.util';
+import { hashPassword } from '../../utils/bcrypt.helper';
 
 export default {
   up: async (queryInterface: QueryInterface, DT: typeof DataTypes) => {

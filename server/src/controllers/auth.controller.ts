@@ -1,7 +1,8 @@
 import createHttpError from 'http-errors';
 import db from '../models';
 import { User } from '../models/user.model';
-import catchAsync from '../utils/catch-async.util';
+import catchAsync from '../utils/catch-async.helper';
+import { signAccessToken } from '../utils/jwt.helper';
 
 interface RegisterDto {
   name: string;
@@ -14,8 +15,13 @@ interface LoginDto {
   password: string;
 }
 
+interface AuthResponse {
+  token: string;
+  user: User;
+}
+
 class AuthController {
-  static register = catchAsync<{}, User, RegisterDto>(async (req, res) => {
+  static register = catchAsync<{}, AuthResponse, RegisterDto>(async (req, res) => {
     const { name, email, password } = req.body;
 
     const foundUser = await db.user.findOne({ where: { email } });
@@ -24,12 +30,21 @@ class AuthController {
     const user = await db.user.create({ name, email, password });
     user.setDataValue('password', undefined!);
 
+    const payload = {
+      sub: user.getDataValue('id'),
+      email: user.getDataValue('email'),
+    };
+    const token = signAccessToken(payload);
+
     res.status(201);
-    res.json(user);
+    res.json({
+      token,
+      user,
+    });
     return;
   });
 
-  static login = catchAsync<{}, User, LoginDto>(async (req, res) => {
+  static login = catchAsync<{}, AuthResponse, LoginDto>(async (req, res) => {
     const { email, password } = req.body;
 
     const user = await db.user.findOne({ where: { email }, attributes: { include: ['password'] } });
@@ -40,7 +55,16 @@ class AuthController {
     if (!match) throw createHttpError(401, 'Email or Password is invalid');
     user.setDataValue('password', undefined!);
 
-    res.json(user);
+    const payload = {
+      sub: user.getDataValue('id'),
+      email: user.getDataValue('email'),
+    };
+    const token = signAccessToken(payload);
+
+    res.json({
+      token,
+      user,
+    });
     return;
   });
 }

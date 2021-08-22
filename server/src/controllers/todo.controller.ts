@@ -2,7 +2,7 @@ import createHttpError from 'http-errors';
 import db from '../models';
 import { Todo } from '../models/todo.model';
 import { PaginationQuery, PaginationResponse } from '../types/pagination';
-import catchAsync from '../utils/catch-async.util';
+import catchAsync from '../utils/catch-async.helper';
 
 interface CreateTodo {
   title: string;

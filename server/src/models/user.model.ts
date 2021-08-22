@@ -2,7 +2,7 @@
 
 import { DataTypes as DT, Model, Sequelize } from 'sequelize';
 import { Models } from '.';
-import { comparePassword, hashPassword } from '../utils/bcrypt.util';
+import { comparePassword, hashPassword } from '../utils/bcrypt.helper';
 
 interface UserAttributes {
   id?: number;
